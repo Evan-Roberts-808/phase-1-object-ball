@@ -1,3 +1,6 @@
+// decalres a global variable for the game object
+const game = gameObject();
+
 function gameObject() {
     return {
       home: {
@@ -115,44 +118,94 @@ function gameObject() {
     };
   }
 
-  function homeTeamName() {
-    let object = gameObject();
-    return object["home"]["teamName"];
-  }
-
-  console.log(homeTeamName());
-
-  function awayTeamName() {
-    let object = gameObject();
-    return object["away"]["teamName"];
-  }
-
-  console.log(awayTeamName());
-
-
 // Build a function, numPointsScored that takes in an argument of a player's name and returns the number of points scored for that player
-
 function numPointsScored(playerName) {
-  let object = gameObject();
-  for (let team in object) {
-    let players = object[team].players;
+  for (let team in game) { // loops through each team in the object
+    let players = game[team].players; // gets the team's players 
+    if (playerName in players) { //checks if the player name passed as an argument is in the team's players object
+      return players[playerName].points; // returns the points scored for that player
+    }
+  }
+  return null; // returns null if the player name is not in the team's players object
+}
+console.log(numPointsScored("Alan Anderson")); // Returns 22
+
+// Build a function, shoeSize, that takes in an argument of a player's name and returns the shoe size for that player
+function shoeSize(playerName) { 
+  for (let team in game) {
+    let players = game[team].players;
     if (playerName in players) {
-      return players[playerName].points;
+      return players[playerName].shoe;
     }
   }
   return null;
 }
-
-console.log(numPointsScored("Alan Anderson")); // Returns 22
-
-// Build a function, shoeSize, that takes in an argument of a player's name and returns the shoe size for that player
+console.log(shoeSize("Alan Anderson")); // Returns 16
 
 // Build a function, teamColors, that takes in an argument of the team name and returns an array of that teams colors.
+function teamColors(teamName){
+   for (let team in game) {
+    let teams = game[team]["teamName"];
+    if (teamName === teams) {
+      return game[team]["colors"];
+    }
+   }
+   return null;
+}
+console.log(teamColors("Brooklyn Nets")); // Returns ["Black", "White"]
 
 // Build a function, teamNames, that operates on the game object to return an array of the team names.
+function teamNames() { 
+  let teamNames = [];
+  for (let team in game) {
+    teamNames.push(game[team]["teamName"]);
+  }
+  return teamNames;
+}
+console.log(teamNames());
 
 // Build a function, playerNumbers, that takes in an argument of a team name and returns an array of the jersey numbers for that team.
 
+function playerNumbers(teamName) {
+  const playerNumbers = [];
+  for (let team in game) {
+    if (teamName === game[team]["teamName"]) {
+      for (let player in game[team].players) {
+        playerNumbers.push(game[team].players[player].number);
+      }
+    }
+  }
+  return playerNumbers;
+}
+console.log(playerNumbers("Brooklyn Nets")); 
+
 // Build a function, playerStats, that takes in an argument of a player's name and returns an object of that player's stats
+function playerStats(playerName) {
+  for (let team in game) {
+    if (playerName in game[team].players) {
+      return game[team].players[playerName];
+    }
+  }
+}
+console.log(playerStats("Alan Anderson"));
 
 // Build a function, bigShoeRebounds, that will return the number of rebounds associated with the player that has the largest shoe size. Break this one down into steps:
+function bigShoeRebounds() {
+  let biggestShoe = 0;
+  let biggestShoeRebounds = 0;
+
+  //Iterate over all players in all teams
+  for (let team in game) { 
+    for (let player in game[team].players) { 
+      let shoeSize = game[team].players[player].shoe;
+
+      //If player has the largest shoe size update the variable
+      if (shoeSize > biggestShoe) { 
+        biggestShoe = shoeSize;
+        biggestShoeRebounds = game[team].players[player].rebounds;
+      }
+    }
+  }
+  return biggestShoeRebounds;
+}
+console.log(bigShoeRebounds());
